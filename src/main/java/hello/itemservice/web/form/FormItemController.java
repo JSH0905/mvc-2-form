@@ -31,8 +31,12 @@ public class FormItemController {
         return "form/item";
     }
 
+    /**
+     * thymeleaf 문법사용시 빈 객체라도 넘겨주어야함.
+     */
     @GetMapping("/add")
-    public String addForm() {
+    public String addForm(Model model) {
+        model.addAttribute("item", new Item());
         return "form/addForm";
     }
 
