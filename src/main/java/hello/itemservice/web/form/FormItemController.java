@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -18,6 +20,19 @@ import java.util.List;
 public class FormItemController {
 
     private final ItemRepository itemRepository;
+
+    /**
+     * @ModelAttribute("모델명") 사용 -> model을 호출하는 메서드에 자동으로 regions 모델을 추가함.
+     * retrun regions == model.attribute("regions", regions) 같은 느낌임.
+     */
+    @ModelAttribute("regions")
+    public Map<String, String>regions(){
+        Map<String, String>regions = new LinkedHashMap<>();
+        regions.put("SEOUL", "서울");
+        regions.put("BUSAN", "부산");
+        regions.put("JEJU", "제주");
+        return  regions;
+    }
 
     @GetMapping
     public String items(Model model) {
@@ -51,6 +66,7 @@ public class FormItemController {
     public String addItem(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
 
         log.info("item.open={}", item.getOpen());
+        log.info("item.regions={}", item.getRegions());
 
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
