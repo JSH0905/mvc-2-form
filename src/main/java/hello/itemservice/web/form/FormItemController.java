@@ -3,6 +3,7 @@ package hello.itemservice.web.form;
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/form/items")
 @RequiredArgsConstructor
@@ -40,8 +42,16 @@ public class FormItemController {
         return "form/addForm";
     }
 
+    /**
+     * 체크 박스 체크시 반환값으로 open의 값이 true가 찍힘.
+     * 하지만 체크를 하지않고 상품 등록시 open의 네임 조차 넘어오지 않는 체크 박스의 한계점이 있음.
+     * --> 히든 필드를 추가 : 체크 박스 체크 x시 open의 반환값으로 false가 넘어옴.
+     */
     @PostMapping("/add")
     public String addItem(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
+
+        log.info("item.open={}", item.getOpen());
+
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
